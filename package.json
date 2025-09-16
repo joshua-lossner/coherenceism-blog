@@ -9,7 +9,9 @@
     "preview": "astro preview",
     "new:post": "node scripts/new-post.mjs",
     "import:md": "node scripts/import-journals.mjs",
-    "normalize:md": "node scripts/normalize-frontmatter.mjs"
+    "normalize:md": "node scripts/normalize-frontmatter.mjs",
+    "cora:update": "bash scripts/cora-update.sh",
+    "cora:validate": "bash scripts/cora-validate.sh"
   },
   "dependencies": {
     "astro": "^4.15.0"

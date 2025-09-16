@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Lightweight pre-commit advisory for cora submodule state
+set -euo pipefail
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+if [ -d "cora/.git" ] || [ -f "cora/.git" ]; then
+  status=$(git submodule status cora 2>/dev/null || true)
+  if echo "$status" | grep -q '^[+-]'; then
+    echo "[pre-commit] Warning: cora submodule not in a clean, synced state:" >&2
+    echo "$status" >&2
+    echo "[pre-commit] Run 'npm run cora:update' to update, then commit the submodule pointer if needed." >&2
+    # Advisory only; do not block commit.
+  fi
+fi
+
+exit 0
+
