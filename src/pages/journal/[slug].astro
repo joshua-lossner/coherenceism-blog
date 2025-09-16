@@ -1,0 +1,108 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { readingTime } from "../../lib/content";
+import { getCollection, getEntryBySlug } from 'astro:content';
+import { RIVERS } from "../../content/rivers";
+
+export async function getStaticPaths() {
+  const entries = await getCollection('journal');
+  return entries.map((entry) => ({ params: { slug: entry.slug }}));
+}
+
+const { slug } = Astro.params;
+const entry = await getEntryBySlug('journal', slug!);
+if (!entry) throw new Error(`Not found: ${slug}`);
+const { Content } = await entry.render();
+const { data } = entry;
+const rt = readingTime(entry.body);
+
+// Precompute archives
+const allPosts = (await getCollection('journal')).sort((a,b)=> +b.data.date - +a.data.date);
+const archiveMap = new Map<string, number>();
+for (const p of allPosts) {
+  const d = p.data.date; const key = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}`;
+  archiveMap.set(key, (archiveMap.get(key) ?? 0) + 1);
+}
+const archiveEntries = Array.from(archiveMap.entries()).sort((a,b)=> b[0].localeCompare(a[0]));
+
+// Prev/Next within same river
+const riverEntries = allPosts.filter(p => p.data.river === data.river)
+  .sort((a,b) => (a.data.orderInRiver ?? Number.MAX_SAFE_INTEGER) - (b.data.orderInRiver ?? Number.MAX_SAFE_INTEGER) || (+b.data.date - +a.data.date));
+const idx = riverEntries.findIndex(e => e.slug === entry.slug);
+const prevEntry = idx > 0 ? riverEntries[idx - 1] : null;
+const nextEntry = idx < riverEntries.length - 1 ? riverEntries[idx + 1] : null;
+---
+<BaseLayout title={`${data.title} — Coherenceism Journal`} description={data.excerpt || 'Journal entry'} activeNav="FEED" type="article" ogImage={`/og/${entry.slug}.svg`}>
+  <aside class="sidebar">
+    <section class="sidebar-section">
+      <div class="sidebar-title">RIVERS</div>
+      <div class="filter-tags">
+        <a class="tag" href="/">ALL POSTS</a>
+        {Object.entries(RIVERS).map(([slug, r]) => (
+          <a class={`tag ${slug === data.river ? 'active' : ''}`} style={`--rcolor:${r.color}`} href={`/rivers/${slug}`} title={r.description}>{r.label.toUpperCase()}</a>
+        ))}
+      </div>
+    </section>
+    <section class="sidebar-section">
+      <div class="sidebar-title">ARCHIVE</div>
+      <ul class="archive-list">
+        {archiveEntries.map(([k,count]) => (
+          <li class="archive-item"><span class="archive-date">{k}</span><span class="archive-count">{count}</span></li>
+        ))}
+      </ul>
+    </section>
+  </aside>
+
+  <main id="main" class="content-feed">
+    <article class="post">
+      <div class="post-meta">
+        <span class="post-date">{data.date.toISOString().slice(0,10)}</span>
+        <span class="post-category">{data.form.toUpperCase()}</span>
+        <span class="river-chip" style={`color:${RIVERS[data.river].color}`}>{RIVERS[data.river].label}</span>
+        {rt && <span>{rt}</span>}
+      </div>
+      <h1 class="post-title">{data.title}</h1>
+      {data.subtitle && <div class="post-excerpt" style="margin-top:-0.6rem">{data.subtitle}</div>}
+      {data.pullQuote && <div class="pull-quote">“{data.pullQuote}”</div>}
+      <div class="prose">
+        <Content />
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top:1.5rem;">
+        {prevEntry ? <a class="read-more" href={`/journal/${prevEntry.slug}`}>← Prev in {RIVERS[data.river].label}</a> : <span />}
+        {nextEntry ? <a class="read-more" href={`/journal/${nextEntry.slug}`}>Next in {RIVERS[data.river].label} →</a> : <span />}
+      </div>
+      {data.related && data.related.length > 0 && (
+        <div style="margin-top:1.5rem">
+          <div class="sidebar-title" style="border:none;">Related</div>
+          <ul style="list-style:none; padding:0;">
+            {data.related.map((slug) => (<li style="margin:0.5rem 0;"><a class="read-more" href={`/journal/${slug}`}>↗ {slug}</a></li>))}
+          </ul>
+        </div>
+      )}
+      <div style="margin-top:1.5rem">
+        <a class="read-more" href="/">← Back to feed</a>
+      </div>
+    </article>
+  </main>
+
+  <script is:inline>
+    // Archive click (post page)
+    const archiveItems = Array.from(document.querySelectorAll('.archive-item'));
+    archiveItems.forEach((it) => it.addEventListener('click', () => {
+      const keyEl = it.querySelector('.archive-date');
+      const key = keyEl ? keyEl.textContent : null;
+      if (key) location.href = `/archives#${key}`;
+    }));
+  </script>
+</BaseLayout>
+
+<!-- JSON-LD for SEO (Article) -->
+<script type="application/ld+json" is:inline>{JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: data.title,
+  datePublished: data.date.toISOString(),
+  author: { '@type': 'Person', name: 'Joshua Lossner' },
+  description: data.excerpt || '',
+  url: new URL(`/journal/${entry.slug}`, Astro.site || 'https://coherenceism.blog').toString()
+})}</script>

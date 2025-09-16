@@ -1,0 +1,31 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('journal');
+const counts = new Map<string, number>();
+for (const p of posts) for (const t of p.data.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+const tags = Array.from(counts.entries()).sort((a,b)=> b[1]-a[1] || a[0].localeCompare(b[0]));
+---
+<BaseLayout title="Tags // Coherenceism">
+  <aside class="sidebar">
+    <section class="sidebar-section">
+      <div class="sidebar-title">NAVIGATION</div>
+      <div class="filter-tags">
+        <a class="tag" href="/">ALL POSTS</a>
+      </div>
+    </section>
+  </aside>
+  <main class="content-feed">
+    <div class="announcement"><div class="announcement-text">TAGS</div></div>
+    <div class="feed-grid">
+      {tags.map(([tag, count]) => (
+        <article class="post">
+          <h2 class="post-title">#{tag}</h2>
+          <p class="post-excerpt">{count} post{count>1?'s':''}</p>
+          <div class="post-footer"><a class="read-more" href={`/tags/${encodeURIComponent(tag)}`}>Browse ▸</a></div>
+        </article>
+      ))}
+    </div>
+  </main>
+</BaseLayout>

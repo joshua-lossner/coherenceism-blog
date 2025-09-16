@@ -1,0 +1,89 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout activeNav="SEARCH">
+  <main id="main" class="content-feed" style="margin-left:0; max-width:900px;">
+    <div class="announcement"><div class="announcement-text">SEARCH // FIND TRANSMISSIONS</div></div>
+    <div style="display:grid; grid-template-columns: 1fr auto auto; gap:0.5rem; margin-bottom:1rem;">
+      <input id="q" type="text" placeholder="Type to search..." style="background: var(--bg-elevated); color: var(--text-primary); border:1px solid var(--neon-cyan); padding:0.6rem 0.8rem;" />
+      <select id="river" style="background: var(--bg-elevated); color: var(--text-primary); border:1px solid var(--neon-yellow); padding:0.6rem 0.8rem;">
+        <option value="">All Rivers</option>
+        <option value="rest-rhythm">Rest & Rhythm</option>
+        <option value="human-ai">Human & AI</option>
+        <option value="history-systems">History & Systems</option>
+        <option value="agency">Agency</option>
+        <option value="awakening-alignment">Awakening & Alignment</option>
+      </select>
+      <select id="form" style="background: var(--bg-elevated); color: var(--text-primary); border:1px solid var(--neon-pink); padding:0.6rem 0.8rem;">
+        <option value="">All Forms</option>
+        <option value="journal">Journal</option>
+        <option value="essay">Essay</option>
+        <option value="announcement">Announcement</option>
+        <option value="transmission">Transmission</option>
+      </select>
+    </div>
+    <div id="results"></div>
+  </main>
+  <script is:inline>
+    const input = document.getElementById('q') as HTMLInputElement;
+    const riverSel = document.getElementById('river') as HTMLSelectElement;
+    const formSel = document.getElementById('form') as HTMLSelectElement;
+    const results = document.getElementById('results') as HTMLDivElement;
+    let data: any[] = [];
+    let loaded = false;
+    async function ensure() {
+      if (loaded) return;
+      const res = await fetch('/search.json');
+      const json = await res.json();
+      data = json.posts;
+      loaded = true;
+    }
+    function render(items: any[]) {
+      if (!items.length) { results.innerHTML = '<p class="post-excerpt">No results.</p>'; return; }
+      results.innerHTML = items.map(p => `
+        <article class="post">
+          <div class="post-meta">
+            <span class="post-date">${p.date.slice(0,10)}</span>
+            <span class="post-category">${p.category}</span>
+          </div>
+          <h2 class="post-title">${p.title}</h2>
+          ${p.excerpt ? `<p class="post-excerpt">${p.excerpt}</p>` : ''}
+          <div class="post-footer">
+            <a class="read-more" href="/journal/${p.slug}">READ ▸</a>
+            <div class="post-stats"><span class="stat-item">◈ ${p.tags.length} TAGS</span></div>
+          </div>
+        </article>
+      `).join('');
+    }
+    function score(q: string, p: any) {
+      const s = q.toLowerCase();
+      let sc = 0;
+      if (p.title.toLowerCase().includes(s)) sc += 3;
+      if ((p.excerpt||'').toLowerCase().includes(s)) sc += 2;
+      if (p.tags.some((t:string)=>t.toLowerCase().includes(s))) sc += 1;
+      if (p.form && p.form.toLowerCase().includes(s)) sc += 1;
+      return sc;
+    }
+    async function search() {
+      await ensure();
+      const q = input.value.trim();
+      const rf = riverSel.value;
+      const ff = formSel.value;
+      const base = data.filter(p => (!rf || p.river === rf) && (!ff || p.form === ff));
+      if (!q && !rf && !ff) { results.innerHTML = '<p class="post-excerpt">Type to search or filter…</p>'; return; }
+      const items = base
+        .map(p => ({ p, sc: score(q, p) }))
+        .filter(x => q ? x.sc > 0 : true)
+        .sort((a,b)=> b.sc - a.sc)
+        .slice(0, 50)
+        .map(x => x.p);
+      render(items);
+    }
+    input.addEventListener('input', () => { search(); });
+    riverSel.addEventListener('change', () => { search(); });
+    formSel.addEventListener('change', () => { search(); });
+    // initialize from ?q=
+    const u = new URL(location.href); const q0 = u.searchParams.get('q'); if (q0) { input.value = q0; }
+    search();
+  </script>
+</BaseLayout>

@@ -1,0 +1,62 @@
+---
+import "../styles/fonts.css";
+import "../styles/global.css";
+interface Props { title?: string; description?: string; activeNav?: string; type?: 'website' | 'article'; ogImage?: string }
+const { title = 'Coherenceism Journal', description = 'Coherenceism journals and transmissions.', activeNav = 'FEED', type = 'website', ogImage } = Astro.props as Props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'http://localhost:4321').toString();
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0B1012" />
+  </head>
+  <body class="coherence">
+    <a href="#main" class="skip-link">Skip to content</a>
+    <div class="reading-progress"><div class="progress-bar" id="progressBar"></div></div>
+    <header class="site-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <a href="/" class="site-logo">
+            <div class="logo-icon"><span>▣</span></div>
+            <div class="logo-text">COHERENCEISM JOURNAL</div>
+          </a>
+        </div>
+      </div>
+    </header>
+    <div class="main-container">
+      <slot />
+      <aside class="data-stream">
+        <div class="stream-content">
+          01001000 01000101 01001100 01001100 01001111 00100000 01010111 01001111 01010010 01001100 01000100 
+          COHERENCE ESTABLISHED // SIGNAL STRONG // TRANSMISSION ACTIVE // NODES SYNCHRONIZED // 
+          ◈ ⬡ ◎ ▣ ◆ ⬢ ◈ ⬡ ◎ ▣ ◆ ⬢
+          QUANTUM STATE COLLAPSED // EMERGENCE DETECTED // PATTERN RECOGNIZED //
+        </div>
+      </aside>
+      
+    </div>
+    <script is:inline>
+      // Reading Progress Bar
+      window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const el = document.getElementById('progressBar');
+        if (el) el.style.width = scrolled + '%';
+      });
+    </script>
+  </body>
+  </html>

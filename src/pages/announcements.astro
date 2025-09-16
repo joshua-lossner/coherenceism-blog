@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from 'astro:content';
+import { readingTime, excerptFrom } from "../lib/content";
+import { RIVERS } from "../content/rivers";
+const posts = (await getCollection('journal')).filter(p => p.data.form === 'announcement').sort((a,b) => +b.data.date - +a.data.date);
+---
+<BaseLayout activeNav="ANNOUNCEMENTS">
+  <main id="main" class="content-feed" style="margin-left:0;">
+    <div class="announcement"><div class="announcement-text">ANNOUNCEMENTS // SIGNAL UPDATES</div></div>
+    <div class="feed-grid">
+    {posts.map(post => {
+      const rt = readingTime(post.body);
+      const ex = post.data.excerpt || excerptFrom(post.body);
+      return (
+      <article class="post">
+        <div class="post-meta">
+          <span class="post-date">{post.data.date.toISOString().slice(0,10)}</span>
+          <span class="post-category">{post.data.form.toUpperCase()}</span>
+          <span class="river-chip" style={`color:${RIVERS[post.data.river].color}`}>{RIVERS[post.data.river].label}</span>
+          {rt && <span>{rt}</span>}
+        </div>
+        <h2 class="post-title">{post.data.title}</h2>
+        {ex && <p class="post-excerpt">{ex}</p>}
+        <div class="post-footer">
+          <a href={`/journal/${post.slug}`} class="read-more">READ ▸</a>
+          <div class="post-stats"><span class="stat-item">◈ {post.data.tags.length} TAGS</span></div>
+        </div>
+      </article>
+    )})}
+    </div>
+  </main>
+</BaseLayout>

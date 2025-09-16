@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from 'astro:content';
+import { RIVERS } from "../../content/rivers";
+
+export async function getStaticPaths() {
+  return Object.keys(RIVERS).map((slug) => ({ params: { river: slug } }));
+}
+
+const { river } = Astro.params;
+const meta = RIVERS[river];
+const posts = (await getCollection('journal'))
+  .filter(p => p.data.river === river)
+  .sort((a,b)=> +b.data.date - +a.data.date);
+---
+<BaseLayout title={`${meta.label} // River`} activeNav="RIVERS">
+  <aside class="sidebar">
+    <section class="sidebar-section">
+      <div class="sidebar-title">RIVERS</div>
+      <div class="filter-tags">
+        <a class="tag" href="/">ALL POSTS</a>
+        {Object.entries(RIVERS).map(([slug, r]) => (
+          <a class={`tag ${slug===river ? 'active' : ''}`} style={`--rcolor:${r.color}`} href={`/rivers/${slug}`}>{r.label.toUpperCase()}</a>
+        ))}
+      </div>
+    </section>
+    <section class="sidebar-section">
+      <div class="sidebar-title">ARCHIVE</div>
+      <ul class="archive-list">
+        {
+          (await (async () => {
+            const all = await getCollection('journal');
+            const map = new Map();
+            for (const p of all) { const d=p.data.date; const k=`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}`; map.set(k,(map.get(k)||0)+1); }
+            return Array.from(map.entries()).sort((a,b)=> a[0] < b[0] ? 1 : -1).map(([k,count]) => (
+              <li class="archive-item"><a href={`/archives#${k}`} class="archive-date">{k}</a><span class="archive-count">{count}</span></li>
+            ));
+          })())
+        }
+      </ul>
+    </section>
+  </aside>
+  <main id="main" class="content-feed" style={`--rcolor:${meta.color}`}>
+    <div class="announcement" style={`border-bottom: 1px solid ${meta.color}`}><div class="announcement-text">{meta.label.toUpperCase()}</div></div>
+    {posts.map(post => (
+      <article class="post">
+        <div class="post-meta">
+          <span class="post-date">{post.data.date.toISOString().slice(0,10)}</span>
+          <span class="post-category">{post.data.form.toUpperCase()}</span>
+          <span class="river-chip" style={`color:${meta.color}`}>{meta.label}</span>
+          {post.data.orderInRiver && <span class="post-category">STEP {post.data.orderInRiver}</span>}
+        </div>
+        <h2 class="post-title">{post.data.title}</h2>
+        {post.data.excerpt && <p class="post-excerpt">{post.data.excerpt}</p>}
+        <div class="post-footer"><a class="read-more" href={`/journal/${post.slug}`}>READ ▸</a></div>
+      </article>
+    ))}
+  </main>
+</BaseLayout>
