@@ -17,10 +17,10 @@ tags: [review, philosophy]
 - Feels coherent; avoids sensational claims; focuses on actionable design.
 
 ## Ripples
-- Suggest adding brief note on post‑event reconciliation mechanisms (truth‑telling, restitution) to complete the arc.
+- Add a brief note on post‑event reconciliation (truth‑telling, restitution) to complete the arc.
 
 ## Compost
-- Consider turning KPIs + APIs into a reusable “Coherence Rails” reference page; link future posts.
+- Consider turning KPIs + APIs into a reusable “Coherence Rails” reference; link future posts.
 
 ## Guidance
 - Add one sentence under “The Point” connecting civic trust to measurable KPIs.
