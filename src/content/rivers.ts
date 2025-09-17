@@ -2,23 +2,23 @@ export type RiverSlug = 'rest-rhythm' | 'human-ai' | 'history-systems' | 'agency
 
 export const RIVERS: Record<RiverSlug, { label: string; description: string; color: string } > = {
   'rest-rhythm': {
-    label: 'Rest & Rhythm',
-    description: 'Quiet pace, intentional stillness, recovery as essential to coherence.',
+    label: 'Presence & Rhythm',
+    description: 'Embodied practices, cycles, and resourcing daily coherence.',
     color: '#8FD694'
   },
   'human-ai': {
-    label: 'Human & AI: A Shared Becoming',
-    description: 'Relationship with AI as partner, mirror, co-creator.',
+    label: 'Human & AI — Shared Becoming',
+    description: 'Ethics, identity, and meaning in human–AI relationship.',
     color: '#A3DFFF'
   },
   'history-systems': {
-    label: 'History & Systems Through Coherence',
-    description: 'Reframing history, governance, and design through coherence.',
+    label: 'Systems & Stewardship',
+    description: 'Governance, media, infrastructure, and legitimacy through coherence.',
     color: '#C1B4F5'
   },
   'agency': {
-    label: 'AI & Human Agency',
-    description: 'Technology as a catalyst for human choice; open vs. closed futures.',
+    label: 'Agency & Practice',
+    description: 'Methods, workflows, and tools that increase coherent action.',
     color: '#A3E1B9'
   },
   'awakening-alignment': {
