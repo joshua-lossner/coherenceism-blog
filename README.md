@@ -12,7 +12,7 @@
 
 ### Working with cora (AI Context)
 - This repo uses `cora/` as a submodule for the AI context and commands.
-- Load cora context: see `AGENT_STARTUP.md` (reads `cora/context/...`).
+- Load cora context: see `AGENTS.md` (reads `cora/context/...`).
 - Update cora to latest main: `npm run cora:update` (then commit submodule pointer).
 - Validate cora context shape: `npm run cora:validate`.
 
