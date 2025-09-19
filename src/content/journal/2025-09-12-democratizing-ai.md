@@ -8,7 +8,7 @@ tags: []
 excerpt: A Call to Action for the Human Future
 related: []
 status: published
-featured: true
+featured: false
 ---
 _A Call to Action for the Human Future_
 
