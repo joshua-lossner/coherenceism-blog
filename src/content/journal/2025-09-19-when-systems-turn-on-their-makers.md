@@ -13,10 +13,6 @@ featured: true
 
 ---
 
-# **Journal — When Systems Turn on Their Makers**
-
-  
-
 _“Brilliance without community isn’t strength. It’s fragility.”_
 
   
@@ -91,7 +87,7 @@ Coherence isn’t just another “ism” for people to cling to. It’s a recogn
 
 ### **Stitched in Blood and Memory**
 
-From Rand to Rush to cubicles. From George Bailey to Fresco. From my father’s hospital bed to the Vegas massacre.
+From Rush to Rand to cubicles. From George Bailey to Fresco. From my father’s hospital bed to the Vegas massacre.
 
 The lesson is stitched in grief and blood: brilliance without community isn’t strength. It’s fragility.
 
