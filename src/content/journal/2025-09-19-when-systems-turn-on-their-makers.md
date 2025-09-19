@@ -49,13 +49,15 @@ But cracks formed. Re-reading Rand in my thirties, the rhetoric rang hollow. Geo
 
 ---
 
-### **The Price Tag on Life**
+### **Searching for Balance**
 
 I went searching for someone who had worked out a balance between collectivism and individualism — a way of being both singular and communal without collapse. That search led me to Jacque Fresco. In the same stretch of late-night web dives, I found _The Venus Project_ and soon after Peter Joseph’s _Zeitgeist_ trilogy. Fresco’s vision landed hardest: society as a body, organs working in harmony, resources distributed for health. When parts compete, you get cancer. Capitalism is that cancer in the social organism.
 
 Jacque Fresco’s vision landed like thunder. He saw society as a body — organs working in harmony, resources distributed for health. When parts compete, you get cancer. Capitalism is that cancer in the social organism.
 
-And right as I found him, cancer gutted my own family. My father — proud, stubborn — was diagnosed with a rare stomach cancer. Shortly after, he was fired from the family commercial print business he had helped build. No income. Insurance that locked him out of treatments that could’ve given him years. He refused disability, worked as a security guard until he couldn’t. I’d visit him on Fridays, but by then he was too far gone to really talk. He kept repeating how he wanted to start his own print business again - even bought a small offset press for the garage.
+### **The Price Tag on Life**
+
+And right as I found him, cancer gutted my own family. My father — proud, stubborn — was diagnosed with a rare stomach cancer. Shortly after, he lost his job from the family commercial print business he had helped build. No income. Insurance that locked him out of treatments that could’ve given him years. He refused disability, worked as a security guard until he couldn’t. I’d visit him on Fridays, but by then he was too far gone to really talk. He kept repeating how he wanted to start his own print business again - even bought a small offset press for the garage.
 
 My old boss, meanwhile — stage-4 lung cancer, wealthy — bought years of life with treatments my father never had access to. Watching him die wasn’t just grief. It was a lesson in structural violence: the price tag on survival.
 
