@@ -79,9 +79,11 @@ That night welded my questions: how can someone be so entitled, so cold, that th
 
 ### **Toward Coherence**
 
-Fresco’s insight and lectures continued to mend me. He aught us, our society mistakes its cancer for health. Yet there are tools now he didn’t have. AI won’t save us, but it can map a way forward — if it’s decentralized, democratized, aligned with human flourishing instead of corporate hoarding.
+Fresco’s insight and lectures continued to mend me. He taught us, our society mistakes its cancer for health. Yet there are tools now he didn’t have. AI won’t save us, but it can map a way forward — if it’s decentralized, democratized, aligned with human flourishing instead of corporate hoarding.
 
 That’s why I call this path Coherenceism. Fresco avoided “isms,” but language matters. People need a name to gather around. “Resource-based economy” sounded like a mechanism. Coherenceism says something simpler: align thought, action, and system with life itself.
+
+Coherence isn’t just another “ism” for people to cling to. It’s a recognition that our survival depends on systems matching the reality of life itself. Capitalism elevates competition until it metastasizes; socialism gets caricatured into bureaucracy; technocracy risks reducing people to inputs. Coherenceism is different: it asks only one thing — that our structures make sense in relation to how humans and living systems actually work. That’s the step forward: not ideology, but alignment. When thought, action, and structure move together, you don’t have to prop society up with constant force. It sustains itself, like a body whose organs are in rhythm.
 
 ---
 
