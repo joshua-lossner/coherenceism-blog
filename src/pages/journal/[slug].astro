@@ -71,6 +71,12 @@ const nextEntry = idx < riverEntries.length - 1 ? riverEntries[idx + 1] : null;
         {prevEntry ? <a class="read-more" href={`/journal/${prevEntry.slug}`}>← Prev in {RIVERS[data.river].label}</a> : <span />}
         {nextEntry ? <a class="read-more" href={`/journal/${nextEntry.slug}`}>Next in {RIVERS[data.river].label} →</a> : <span />}
       </div>
+      <div style="margin-top:1.5rem">
+        <div class="sidebar-title" style="border:none;">Coherence Canon</div>
+        <p class="prose" style="margin:.5rem 0 1rem">This journal entry references the canonical library at coherenceism.info.</p>
+        {data.branch && (<p><a class="read-more" href={"https://coherenceism.info/"+data.branch}>↗ {data.branch}</a></p>)}
+        {data.seed && (<p><a class="read-more" href={"https://coherenceism.info/seed/"+data.seed}>↗ {data.seed}</a></p>)}
+      </div>
       {data.related && data.related.length > 0 && (
         <div style="margin-top:1.5rem">
           <div class="sidebar-title" style="border:none;">Related</div>
