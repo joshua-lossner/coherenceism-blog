@@ -1,0 +1,177 @@
+/* Dyslexia-Friendly & Accessibility Enhancements */
+
+/* Improved line height and spacing for better readability */
+body {
+  line-height: 1.75; /* Increased from default for dyslexic readers */
+}
+
+p, li {
+  line-height: 1.8; /* Even more generous for body text */
+  margin-bottom: 1.25em; /* Clear paragraph separation */
+}
+
+/* Optimal line length for readability (45-75 characters) */
+.prose,
+.content-feed article,
+.post-content {
+  max-width: 65ch; /* Already good! 65 characters is ideal */
+}
+
+/* Slightly increased letter spacing for better character distinction */
+.post-content p,
+.prose p {
+  letter-spacing: 0.02em;
+  word-spacing: 0.12em; /* Slightly increased word spacing */
+}
+
+/* Avoid pure black/white - softer contrast is easier on eyes */
+/* (Already implemented with --bg-primary and --text-primary - good!) */
+
+/* Clear heading hierarchy with adequate spacing */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  font-weight: 600; /* Not too bold */
+}
+
+h1 { margin-top: 0; }
+
+/* Make links clearly distinguishable */
+a {
+  text-decoration-skip-ink: auto; /* Skip descenders for cleaner look */
+}
+
+.prose a,
+.post-content a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  color: var(--river-humanai); /* Distinct color */
+}
+
+.prose a:hover,
+.post-content a:hover {
+  text-decoration-thickness: 2px;
+  color: var(--accent);
+}
+
+/* Avoid italics where possible - harder for dyslexic readers */
+/* When italics are necessary, make them more distinct */
+em, i {
+  font-style: italic;
+  color: var(--accent); /* Add color distinction to make them stand out */
+  font-weight: 500; /* Slightly heavier */
+}
+
+/* Lists with clear bullets and spacing */
+ul, ol {
+  padding-left: 2em;
+  margin-bottom: 1.5em;
+}
+
+li {
+  margin-bottom: 0.75em;
+}
+
+/* Focus states for keyboard navigation */
+a:focus,
+button:focus,
+input:focus,
+textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Ensure sufficient contrast for all text */
+/* WCAG AA requires 4.5:1 for normal text, 3:1 for large text */
+.text-secondary {
+  color: #B4BCC5; /* Slightly lighter than current for better contrast */
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reading-progress .progress-bar {
+    transition: none;
+  }
+}
+
+/* Optional: Dyslexia-friendly font toggle */
+/* Uncomment and add toggle button if desired */
+/*
+body.dyslexia-font {
+  --font-body: "OpenDyslexic", "Comic Sans MS", var(--font-body);
+}
+*/
+
+/* Better focus indicator for current reading position */
+.post-content p:target,
+.prose :target {
+  background: rgba(143, 214, 148, 0.1);
+  padding: 0.5em;
+  margin-left: -0.5em;
+  margin-right: -0.5em;
+  border-left: 3px solid var(--accent);
+  border-radius: 2px;
+}
+
+/* Field Notes section - keep clean and scannable */
+.prose hr {
+  margin: 2.5rem 0;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Ensure code blocks are readable */
+code, pre {
+  font-size: 0.95em;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+/* Better blockquote distinction */
+blockquote {
+  margin: 1.5em 0;
+  padding-left: 1.5em;
+  border-left: 3px solid var(--accent);
+  font-style: normal; /* Avoid italics */
+  color: var(--text-secondary);
+}
+
+/* Tables with clear structure */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.5em 0;
+}
+
+th, td {
+  padding: 0.75em 1em;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  text-align: left;
+}
+
+th {
+  font-weight: 600;
+  border-bottom: 2px solid var(--accent);
+}
+
+/* Mobile: Ensure touch targets are at least 44x44px */
+@media (max-width: 768px) {
+  .nav-link,
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}

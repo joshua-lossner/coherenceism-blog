@@ -4,94 +4,61 @@ import { getCollection } from 'astro:content';
 import { excerptFrom } from "../lib/content";
 import { RIVERS } from "../content/rivers";
 
-const posts = (await getCollection('journal')).filter(p => p.data.status !== 'draft').sort((a,b) => +b.data.date - +a.data.date);
-const featured = posts.find(p => p.data.featured) ?? posts[0];
-const nonFeatured = posts.filter(p => p.id !== featured?.id);
-const PAGE_SIZE = 6;
-const rest = nonFeatured.slice(0, PAGE_SIZE);
-const hasMore = nonFeatured.length > PAGE_SIZE;
+// Get river filter from query params
+const riverFilter = Astro.url.searchParams.get('river');
 
-const allTags = Array.from(new Set(posts.flatMap(p => p.data.tags))).sort();
+// Get all published posts, sorted chronologically (newest first)
+let allPosts = (await getCollection('journal'))
+  .filter(p => p.data.status !== 'draft')
+  .sort((a,b) => +b.data.date - +a.data.date);
 
-// Build archive map: YYYY.MM → count
-const archiveMap = new Map<string, number>();
-for (const p of posts) {
-  const d = p.data.date;
-  const key = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}`;
-  archiveMap.set(key, (archiveMap.get(key) ?? 0) + 1);
-}
-const archives = Array.from(archiveMap.entries()).sort((a,b) => a[0] < b[0] ? 1 : -1);
+// Filter by river if specified
+const posts = riverFilter && riverFilter !== 'all'
+  ? allPosts.filter(p => p.data.river === riverFilter)
+  : allPosts;
+
+const PAGE_SIZE = 10;
+const displayPosts = posts.slice(0, PAGE_SIZE);
+const hasMore = posts.length > PAGE_SIZE;
 ---
 <BaseLayout activeNav="FEED">
-  <aside class="sidebar">
-    <section class="sidebar-section">
-      <div class="sidebar-title">RIVERS</div>
-      <div class="filter-tags">
-        <a class="tag active" href="/">ALL POSTS</a>
-        {Object.entries(RIVERS).map(([slug, r]) => (
-          <a class="tag" style={`--rcolor:${r.color}`} href={`/rivers/${slug}`}>{r.label.toUpperCase()}</a>
-        ))}
-      </div>
-    </section>
-    <section class="sidebar-section">
-      <div class="sidebar-title">ARCHIVE</div>
-      <ul class="archive-list">
-        {archives.map(([k,count]) => (
-          <li class="archive-item" data-archive={k}><span class="archive-date">{k}</span><span class="archive-count">{count}</span></li>
-        ))}
-      </ul>
-    </section>
-  </aside>
-
   <main id="main" class="content-feed">
-    <div class="announcement sticky"><div class="announcement-text">JOURNAL FEED</div></div>
-
-    <div class="feed-grid">
-    {featured && (
-      <article class="featured-post">
-        <div class="post-meta">
-          <span class="post-date">{featured.data.date.toISOString().slice(0,10)}</span>
+    <div class="feed-inner">
+      <div class="announcement sticky">
+        <div class="announcement-text">
+          {riverFilter && riverFilter !== 'all'
+            ? `${RIVERS[riverFilter as keyof typeof RIVERS].label.toUpperCase()} // RIVER`
+            : 'COHERENCEISM BLOG'}
         </div>
-        <h2 class="featured-title">{featured.data.title}</h2>
-        {featured.data.excerpt && <p class="featured-excerpt">{featured.data.excerpt}</p>}
-        <a class="featured-cta" href={`/journal/${featured.slug}`}>OPEN ENTRY ▸</a>
-      </article>
-    )}
+      </div>
 
-    {rest.map(post => {
-      const ex = post.data.excerpt || excerptFrom(post.body);
-      return (
-      <article class="post" style={`--rcolor:${RIVERS[post.data.river].color}`} data-river={post.data.river} data-date={post.data.date.toISOString().slice(0,10)}>
-        <div class="post-header">
-          <div>
+      <div class="feed-list">
+      {displayPosts.map(post => {
+        const ex = post.data.excerpt || excerptFrom(post.body);
+        return (
+        <article class="feed-post" style={`--rcolor:${RIVERS[post.data.river].color}`} data-river={post.data.river}>
+          <div class="post-header">
             <div class="post-meta">
               <span class="post-date">{post.data.date.toISOString().slice(0,10)}</span>
+              <span class="river-chip" style={`color:${RIVERS[post.data.river].color}`}>
+                {RIVERS[post.data.river].label}
+              </span>
             </div>
             <h2 class="post-title">{post.data.title}</h2>
           </div>
-        </div>
-        {ex && <p class="post-excerpt">{ex}</p>}
-        <div class="post-footer">
-          <a href={`/journal/${post.slug}`} class="read-more">READ ▸</a>
-        </div>
-      </article>
-    )})}
-    </div>
-
-    {hasMore && (
-      <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
-        <a id="olderLink" class="read-more" href="/page/2">Older posts ▸</a>
+          {ex && <p class="post-excerpt">{ex}</p>}
+          <div class="post-footer">
+            <a href={`/journal/${post.slug}`} class="read-more">READ ▸</a>
+          </div>
+        </article>
+      )})}
       </div>
-    )}
-  </main>
 
-  <script is:inline>
-    // Archive navigation → Archives page
-    const archiveItems = Array.from(document.querySelectorAll('.archive-item'));
-    archiveItems.forEach((it) => it.addEventListener('click', () => {
-      const key = it.dataset.archive;
-      if (key) location.href = `/archives#${key}`;
-    }));
-  </script>
-  
+      {hasMore && (
+        <div class="feed-load-more">
+          <a class="read-more" href="/page/2">Load more posts ▸</a>
+        </div>
+      )}
+    </div>
+  </main>
 </BaseLayout>

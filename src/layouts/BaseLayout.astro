@@ -1,6 +1,7 @@
 ---
 import "../styles/fonts.css";
 import "../styles/global.css";
+import "../styles/accessibility.css";
 interface Props { title?: string; description?: string; activeNav?: string; type?: 'website' | 'article'; ogImage?: string }
 const { title = 'Coherenceism Journal', description = 'Coherenceism journals and transmissions.', activeNav = 'FEED', type = 'website', ogImage } = Astro.props as Props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'http://localhost:4321').toString();
@@ -25,6 +26,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'http://localhost:43
   </head>
   <body class="coherence">
     <a href="#main" class="skip-link">Skip to content</a>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+      ☰ MENU
+    </button>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="reading-progress"><div class="progress-bar" id="progressBar"></div></div>
     <header class="site-header">
       <div class="header-content">
@@ -34,9 +39,46 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'http://localhost:43
             <div class="logo-text">COHERENCEISM JOURNAL</div>
           </a>
         </div>
+        <nav class="primary-nav">
+          <a href="/about" class={activeNav === 'ABOUT' ? 'nav-link active' : 'nav-link'}>ABOUT</a>
+        </nav>
       </div>
     </header>
     <div class="main-container">
+      <aside class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-title">RIVERS</div>
+          <nav class="river-filters">
+            <button class="river-filter active" data-river="all">
+              <span class="filter-icon">◈</span>
+              <span class="filter-label">ALL POSTS</span>
+            </button>
+            <button class="river-filter" data-river="agency">
+              <span class="filter-icon" style="color: var(--river-agency)">●</span>
+              <span class="filter-label">AGENCY</span>
+            </button>
+            <button class="river-filter" data-river="human-ai">
+              <span class="filter-icon" style="color: var(--river-humanai)">●</span>
+              <span class="filter-label">HUMAN-AI</span>
+            </button>
+            <button class="river-filter" data-river="rest-rhythm">
+              <span class="filter-icon" style="color: var(--river-rest)">●</span>
+              <span class="filter-label">REST & RHYTHM</span>
+            </button>
+            <button class="river-filter" data-river="history-systems">
+              <span class="filter-icon" style="color: var(--river-history)">●</span>
+              <span class="filter-label">SYSTEMS</span>
+            </button>
+            <button class="river-filter" data-river="awakening-alignment">
+              <span class="filter-icon" style="color: var(--river-awakening)">●</span>
+              <span class="filter-label">AWAKENING</span>
+            </button>
+          </nav>
+        </div>
+        <div class="sidebar-footer">
+          <a href="/about" class="about-link">About</a>
+        </div>
+      </aside>
       <slot />
       <aside class="data-stream">
         <div class="stream-content">
@@ -49,6 +91,88 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'http://localhost:43
       
     </div>
     <script is:inline>
+      // Mobile menu toggle
+      document.addEventListener('DOMContentLoaded', () => {
+        const menuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.querySelector('.sidebar-nav');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function closeSidebar() {
+          sidebar?.classList.remove('open');
+          overlay?.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+
+        function openSidebar() {
+          sidebar?.classList.add('open');
+          overlay?.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+
+        menuToggle?.addEventListener('click', () => {
+          if (sidebar?.classList.contains('open')) {
+            closeSidebar();
+          } else {
+            openSidebar();
+          }
+        });
+
+        overlay?.addEventListener('click', closeSidebar);
+
+        // Close sidebar when a river filter is clicked on mobile
+        const filterButtons = document.querySelectorAll('.river-filter');
+        filterButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            if (window.innerWidth <= 900) {
+              closeSidebar();
+            }
+          });
+        });
+      });
+
+      // River filtering
+      document.addEventListener('DOMContentLoaded', () => {
+        const filterButtons = document.querySelectorAll('.river-filter');
+        const posts = document.querySelectorAll('.feed-post');
+        const hasFeedPosts = posts.length > 0;
+        const announcement = document.querySelector('.announcement-text');
+
+        filterButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const river = button.dataset.river;
+
+            if (!hasFeedPosts) {
+              const target = river === 'all' ? '/' : `/?river=${river}`;
+              window.location.href = target;
+              return;
+            }
+
+            // Update active state
+            filterButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            // Filter posts
+            posts.forEach(post => {
+              if (river === 'all' || post.dataset.river === river) {
+                post.style.display = 'block';
+              } else {
+                post.style.display = 'none';
+              }
+            });
+
+            // Update announcement text
+            if (announcement) {
+              if (river === 'all') {
+                announcement.textContent = 'COHERENCEISM BLOG';
+              } else {
+                const riverLabel = button.querySelector('.filter-label').textContent;
+                announcement.textContent = riverLabel + ' // RIVER';
+              }
+            }
+          });
+        });
+      });
+
       // Reading Progress Bar
       window.addEventListener('scroll', () => {
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;

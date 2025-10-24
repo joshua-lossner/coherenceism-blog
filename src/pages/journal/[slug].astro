@@ -39,7 +39,7 @@ const nextEntry = idx < riverEntries.length - 1 ? riverEntries[idx + 1] : null;
       <div class="filter-tags">
         <a class="tag" href="/">ALL POSTS</a>
         {Object.entries(RIVERS).map(([slug, r]) => (
-          <a class={`tag ${slug === data.river ? 'active' : ''}`} style={`--rcolor:${r.color}`} href={`/rivers/${slug}`} title={r.description}>{r.label.toUpperCase()}</a>
+          <a class={`tag ${slug === data.river ? 'active' : ''}`} style={`--rcolor:${r.color}`} href={`/?river=${slug}`} title={r.description}>{r.label.toUpperCase()}</a>
         ))}
       </div>
     </section>
@@ -57,7 +57,6 @@ const nextEntry = idx < riverEntries.length - 1 ? riverEntries[idx + 1] : null;
     <article class="post">
       <div class="post-meta">
         <span class="post-date">{data.date.toISOString().slice(0,10)}</span>
-        <span class="post-category">{data.form.toUpperCase()}</span>
         <span class="river-chip" style={`color:${RIVERS[data.river].color}`}>{RIVERS[data.river].label}</span>
         {rt && <span>{rt}</span>}
       </div>
