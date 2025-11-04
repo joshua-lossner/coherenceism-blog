@@ -1,0 +1,5 @@
+# Ignore workflow files
+**/scans-*.md
+**/extractions-*.md
+TEMPLATE.md
+OUTPUT-FORMAT.md
