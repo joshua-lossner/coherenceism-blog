@@ -1,7 +1,11 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 const journal = defineCollection({
-  type: 'content',
+  loader: glob({
+    pattern: '**/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-*.md',
+    base: './src/content/journal'
+  }),
   schema: z.object({
     title: z.string(),
     subtitle: z.string().optional(),
