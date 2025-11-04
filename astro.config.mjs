@@ -4,6 +4,9 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://coherenceism.blog',
   server: { port: 4321 },
-  build: { format: 'directory' }
+  build: { format: 'directory' },
+  experimental: {
+    contentLayer: true
+  }
 });
 

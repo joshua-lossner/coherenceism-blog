@@ -4,7 +4,7 @@ import { glob } from 'astro/loaders';
 const journal = defineCollection({
   loader: glob({
     pattern: '**/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-*.md',
-    base: './src/content/journal'
+    base: './cora/harvest/blog-posts'
   }),
   schema: z.object({
     title: z.string(),
